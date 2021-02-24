@@ -28,10 +28,10 @@ module Simpler
     def call(env)
       route = @router.route_for(env)
       return default if route.nil?
-
+      
       controller = route.controller.new(env)
       action = route.action
-
+      
       make_response(controller, action)
     end
 
