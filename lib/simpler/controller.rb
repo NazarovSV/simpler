@@ -14,7 +14,7 @@ module Simpler
       @request.env['simpler.controller'] = self
       @request.env['simpler.action'] = action
 
-      set_default_headers
+      set_default_headers unless @response['Content-Type']
       send(action)
       write_response
 
@@ -55,6 +55,10 @@ module Simpler
       return unless Rack::Utils::HTTP_STATUS_CODES.key?(status)
 
       @response.status = status
+    end
+
+    def add_header_to_response(name:, value:)
+      @response[name] = value
     end
 
     def render_type(options)
