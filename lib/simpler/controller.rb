@@ -2,7 +2,6 @@ require_relative 'view'
 
 module Simpler
   class Controller
-
     attr_reader :name, :request, :response
 
     def initialize(env)
@@ -46,9 +45,16 @@ module Simpler
       @request.params
     end
 
-    def render(template)
-      @request.env['simpler.template'] = template
-    end
+    def render(options = nil)
+      return unless options.is_a?(Hash)
 
+      if options[:plain]
+        @request.env['simpler.render_type'] = 'plain'
+        @request.env['simpler.plain_text'] = options[:plain]
+      else
+        @request.env['simpler.render_type'] = View::DEFAULT_RENDER_TYPE
+        @request.env['simpler.template'] = options[:template]
+      end
+    end
   end
 end
