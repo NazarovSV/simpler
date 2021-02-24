@@ -6,7 +6,6 @@ require_relative 'controller'
 
 module Simpler
   class Application
-
     include Singleton
 
     attr_reader :db
@@ -28,6 +27,11 @@ module Simpler
 
     def call(env)
       route = @router.route_for(env)
+      if route.nil?
+        p Rack::Utils.status_code(:not_found)
+        return Rack::Response.new('Not Found', Rack::Utils.status_code(:not_found), { 'ContentType' => 'text/plain' }).finish
+      end
+
       controller = route.controller.new(env)
       action = route.action
 
@@ -53,6 +57,5 @@ module Simpler
     def make_response(controller, action)
       controller.make_response(action)
     end
-
   end
 end
