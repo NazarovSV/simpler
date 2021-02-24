@@ -1,7 +1,7 @@
 class TestsController < Simpler::Controller
 
   def index
-    @time = Time.now
+    render plain: 'Some-text', status: 404
   end
 
   def create
