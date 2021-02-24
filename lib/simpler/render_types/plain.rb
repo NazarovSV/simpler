@@ -5,6 +5,7 @@ module Simpler
     end
 
     def render(_binding)
+      @env['simpler.template_path'] = 'plain text'
       @env['simpler.plain_text']
     end
   end

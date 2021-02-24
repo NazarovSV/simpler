@@ -2,9 +2,12 @@ require_relative 'view'
 
 module Simpler
   class Controller
+    include Rack::Utils
+
     attr_reader :name, :request, :response
 
     def initialize(env)
+      @env = env
       @name = extract_name
       @request = Rack::Request.new(env)
       @response = Rack::Response.new
@@ -13,6 +16,12 @@ module Simpler
     def make_response(action)
       @request.env['simpler.controller'] = self
       @request.env['simpler.action'] = action
+
+      @env['simpler.handler'] = "#{self.class.name}\##{action}"
+
+      query_parameters = parse_nested_query(@env['QUERY_STRING'])
+
+      @env['simpler.parameters'] = query_parameters if !query_parameters.nil? && !query_parameters.empty?
 
       set_default_headers unless @response['Content-Type']
       send(action)
@@ -72,13 +81,11 @@ module Simpler
     end
 
     def valid_status!(status)
-      raise "Unknow status #{status}" unless Rack::Utils::HTTP_STATUS_CODES.key?(status)
+      raise "Unknow status #{status}" unless HTTP_STATUS_CODES.key?(status)
     end
 
     def valid_options!(options)
       raise "Invalid parameter #{options}" unless options.is_a?(Hash)
     end
-
-
   end
 end
