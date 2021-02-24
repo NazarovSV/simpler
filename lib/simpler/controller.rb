@@ -42,7 +42,7 @@ module Simpler
     end
 
     def params
-      @request.params
+      @request.params.merge(@request.env['simpler.route.params'])
     end
 
     def render(options = nil)

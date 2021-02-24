@@ -27,10 +27,7 @@ module Simpler
 
     def call(env)
       route = @router.route_for(env)
-      if route.nil?
-        p Rack::Utils.status_code(:not_found)
-        return Rack::Response.new('Not Found', Rack::Utils.status_code(:not_found), { 'ContentType' => 'text/plain' }).finish
-      end
+      return default if route.nil?
 
       controller = route.controller.new(env)
       action = route.action
@@ -56,6 +53,10 @@ module Simpler
 
     def make_response(controller, action)
       controller.make_response(action)
+    end
+
+    def default
+      Rack::Response.new('Not Found', Rack::Utils.status_code(:not_found), { 'ContentType' => 'text/plain' }).finish
     end
   end
 end
