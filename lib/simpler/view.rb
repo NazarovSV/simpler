@@ -3,9 +3,6 @@ require_relative 'render_types/plain'
 
 module Simpler
   class View
-
-    VALID_FORMATS = {'erb, '}
-
     DEFAULT_RENDER_TYPE = 'erb'.freeze
 
     def initialize(env)
