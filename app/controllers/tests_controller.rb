@@ -1,7 +1,8 @@
 class TestsController < Simpler::Controller
 
   def index
-    render plain: 'Some-text', status: 404
+    response_status(404)
+    render plain: 'Some-text'
   end
 
   def create

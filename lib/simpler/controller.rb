@@ -48,14 +48,13 @@ module Simpler
     def render(options = nil)
       return unless options.is_a?(Hash)
 
-      status_code(options)
       render_type(options)
     end
 
-    def status_code(options)
-      return unless options[:status] || !Rack::Utils::HTTP_STATUS_CODES.key?(options[:status])
+    def response_status(status)
+      return unless Rack::Utils::HTTP_STATUS_CODES.key?(status)
 
-      @response.status = options[:status]
+      @response.status = status
     end
 
     def render_type(options)
