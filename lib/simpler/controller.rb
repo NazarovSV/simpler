@@ -46,13 +46,13 @@ module Simpler
     end
 
     def render(options = nil)
-      return unless options.is_a?(Hash)
+      valid_options!(options)
 
       render_type(options)
     end
 
     def response_status(status)
-      return unless Rack::Utils::HTTP_STATUS_CODES.key?(status)
+      valid_status!(status)
 
       @response.status = status
     end
@@ -70,5 +70,15 @@ module Simpler
         @request.env['simpler.template'] = options[:template]
       end
     end
+
+    def valid_status!(status)
+      raise "Unknow status #{status}" unless Rack::Utils::HTTP_STATUS_CODES.key?(status)
+    end
+
+    def valid_options!(options)
+      raise "Invalid parameter #{options}" unless options.is_a?(Hash)
+    end
+
+
   end
 end
